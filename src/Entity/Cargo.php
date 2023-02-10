@@ -4,12 +4,20 @@ namespace App\Entity;
 
 use App\Repository\CargoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert; 
 
-
+/**
+ * Cargo object
+ * 
+ * @package Project_lemonmind/App/Entity
+ * @author Monika Stankiewicz <moniaastankiewicz@gmailcom>
+ */
 #[ORM\Entity(repositoryClass: CargoRepository::class)]
 class Cargo
 {
     /**
+     * Cargo id
+     * 
      * @var int|null
      */
     #[ORM\Id]
@@ -18,18 +26,29 @@ class Cargo
     private ?int $id = null;
 
     /**
+     * Name of cargo
+     * 
      * @var string|null
      */
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    // /**
-    //  * @var int|null
-    //  */
-    // #[ORM\Column]
-    // private ?int $weight = null;
+    /**
+     * Cargo weight in kilograms
+     * 
+     * @Assert\Range( 
+     * max = 35000, 
+     * maxMessage = "Maksymalna waga pojedynczego ładunku wynosi: {{ limit }} kilogramów" 
+     * ) 
+     * 
+     * @var int|null
+     */
+    #[ORM\Column]
+    private ?int $weight_kg = null;
 
     /**
+     * Type of cargo
+     * 
      * @var string|null
      */
     #[ORM\Column(length: 255)]
@@ -43,9 +62,6 @@ class Cargo
     #[ORM\ManyToOne(inversedBy: 'cargos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Transport $transport = null;
-
-    #[ORM\Column]
-    private ?int $weight_kg = null;
 
     /**
      * @return int|null
@@ -75,25 +91,25 @@ class Cargo
         return $this;
     }
 
-    // /**
-    //  * @return int|null
-    //  */
-    // public function getWeight(): ?int
-    // {
-    //     return $this->weight;
-    // }
+    /**
+     * @return int|null
+     */
+    public function getWeightKg(): ?int
+    {
+        return $this->weight_kg;
+    }
 
-    // /**
-    //  * @param int $weight
-    //  * 
-    //  * @return self
-    //  */
-    // public function setWeight(int $weight): self
-    // {
-    //     $this->weight = $weight;
+    /**
+     * @param int $weight_kg
+     * 
+     * @return self
+     */
+    public function setWeightKg(int $weight_kg): self
+    {
+        $this->weight_kg = $weight_kg;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     /**
      * @return string|null
@@ -131,18 +147,6 @@ class Cargo
     public function setTransport(?Transport $transport): self
     {
         $this->transport = $transport;
-
-        return $this;
-    }
-
-    public function getWeightKg(): ?int
-    {
-        return $this->weight_kg;
-    }
-
-    public function setWeightKg(int $weight_kg): self
-    {
-        $this->weight_kg = $weight_kg;
 
         return $this;
     }
